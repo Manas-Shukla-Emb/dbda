@@ -9,6 +9,7 @@ from tqdm import tqdm
 import shutil
 import psutil
 from joblib import Parallel, delayed
+import subprocess
 
 def get_free_space():
     hdd = psutil.disk_usage('/')
@@ -26,7 +27,7 @@ def download_repo(repo):
     file_name = repo.split("/")[-1]
     if file_name not in os.listdir("output/"):
         if procced_or_break(get_free_space()):
-            os.system('git clone --quiet --depth 1 --single-branch https://github.com/' + repo + ' ' + 'output' + '/' + file_name)
+            subprocess.Popen(['git', 'clone', '--quiet', '--depth', '1', '--single-branch', 'https://github.com/' + repo, OUTPUT_PATH + file_name]).wait()
             for root, dirs, files in os.walk(OUTPUT_PATH + file_name):
                 for file in files:
                     if file.endswith(".js"):
